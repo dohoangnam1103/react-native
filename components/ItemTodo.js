@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import {
-  Platform,
   StyleSheet,
   Text,
-  View,
-  FlatList
 } from 'react-native';
 
 import Swipeout from 'react-native-swipeout';
@@ -20,8 +17,11 @@ export default class ItemTodo extends Component<Props> {
   }
 
   handleDelete = () => {
-    debugger
-    this.props.handleDelete(this.state.activeRowKey);
+    this.props.handleDelete();
+  }
+
+  handleEdit = () => {
+    this.props.handleEdit();
   }
 
   render() {
@@ -32,11 +32,12 @@ export default class ItemTodo extends Component<Props> {
       },
       onOpen: (secId, rowId, direction) => {
         this.setState({activeRowKey: this.props.item.id});
+        this.props.handleChangeItemSelect(this.state.activeRowKey);
       },
       right: [
         {
           onPress: () => {
-            this.handleDelete()
+            this.handleDelete();
           },
           text: 'Delete',
           type: 'delete'
@@ -45,7 +46,7 @@ export default class ItemTodo extends Component<Props> {
       left: [
         {
           onPress: () => {
-
+            this.handleEdit();
           },
           text: 'Edit',
           type: 'secondary'

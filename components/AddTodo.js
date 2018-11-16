@@ -1,13 +1,9 @@
 import React, {Component} from 'react';
 import {
-  Platform,
   StyleSheet,
-  Text,
   View,
-  FlatList,
   TextInput,
   Button,
-  Alert
 } from 'react-native';
 
 type Props = {};

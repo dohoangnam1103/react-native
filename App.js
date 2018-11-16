@@ -1,22 +1,13 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React, {Component} from 'react';
 import {
   Platform,
   StyleSheet,
-  Text,
   View,
-  FlatList
 } from 'react-native';
 
 import ListTodo from './components/ListTodo';
 import AddTodo from './components/AddTodo';
+import EditModal from './components/EditModal';
 
 const instructions = Platform.select({
   ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
@@ -34,6 +25,7 @@ export default class App extends Component<Props> {
       listTodo: [
         {id: 1, name: 'test'},
       ],
+      itemSelected: null
     }
   }
 
@@ -46,12 +38,38 @@ export default class App extends Component<Props> {
 
     this.setState({
       listTodo: this.state.listTodo.concat({id: newId, name: newTodo})
-    })
+    });
   }
 
-  handleDelete = (id) => {
+  handleDelete = () => {
+    const { id } = this.state.itemSelected;
+
     this.setState({
       listTodo: this.state.listTodo.filter(item => item.id !== id)
+    });
+  }
+
+  handleEdit = () => {
+    this.refs.editModal.showEditModal();
+  }
+
+  handleSubmitEdit = (obj, newName) => {
+    const newState = this.state.listTodo.map(todo => {
+      if (todo.id === obj.id){
+
+        return {...todo, name: newName};
+      }
+
+      return todo;
+    });
+
+    this.setState({listTodo: newState});
+  }
+
+  handleChangeItemSelect = (id) => {
+    objEdit = this.state.listTodo.filter(todo => todo.id === id)[0];
+    this.setState({
+      itemSelected: objEdit
     })
   }
 
@@ -66,6 +84,15 @@ export default class App extends Component<Props> {
         <ListTodo
           listTodo={this.state.listTodo}
           handleDelete={this.handleDelete}
+          handleEdit={this.handleEdit}
+          handleChangeItemSelect={this.handleChangeItemSelect}
+        />
+
+        <EditModal
+          ref={'editModal'}
+          parentFlatList={this}
+          itemSelected={this.state.itemSelected}
+          handleSubmitEdit={this.handleSubmitEdit}
         />
       </View>
     );
